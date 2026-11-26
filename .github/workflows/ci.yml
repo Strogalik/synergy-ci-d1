@@ -1,0 +1,25 @@
+name: Unit tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tariffs.Tests -c Release --collect "XPlat Code Coverage"
+      - name: Compare repeated lookup performance
+        run: |
+          mkdir -p metrics
+          dotnet build Bench -c Release
+          dotnet run --project Bench -c Release --no-build > metrics/performance.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverlet
+          path: |
+            Tariffs.Tests/TestResults/
+            metrics/performance.csv
