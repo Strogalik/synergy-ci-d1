@@ -11,7 +11,7 @@ public class CalculatorTest
         mock.Setup(rates => rates.Find("A")).Returns(2m);
         var calculator = new Calculator(mock.Object);
 
-        Assert.Equal(new Quote("A", 3, 6m), calculator.Calculate("A", 3));
+        Assert.Equal(new Quote("A", 3, 7m), calculator.Calculate("A", 3));
         mock.Verify(rates => rates.Find("A"), Times.Once);
     }
 
